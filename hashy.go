@@ -12,10 +12,11 @@ import (
 
 // Options is a basic structure required for the Hashy to work
 type Options struct {
-	Input      string // Input data, a raw csv or a path to csv file
-	KeyColumns []int  // Columns indexes that should be used as a hash keys (order matters: {1,2} and {2,1} are two different keys)
-	SkipHeader bool   // Yep
-	Delimiter  rune   // Csv columns delimiter (optional)
+	Input             string // Input data, a raw csv or a path to csv file
+	KeyColumns        []int  // Columns indexes that should be used as a hash keys (order matters: {1,2} and {2,1} are two different keys)
+	SkipHeader        bool   // Yep
+	IncludeKeysValues bool   // Include key columns values in hash content
+	Delimiter         rune   // Csv columns delimiter (optional)
 }
 
 // File makes hash from csv file
@@ -66,6 +67,11 @@ func File(options Options) (map[string][][]string, error) {
 		
 		// Add data
 		key := makeKey(line, options.KeyColumns)
+		
+		if !options.IncludeKeysValues {
+			removeKeyColumnsValues(&line, options.KeyColumns)
+		}
+		
 		hash[key] = append(hash[key], line)
 	}
 	
@@ -84,6 +90,13 @@ func makeKey(line []string, columns []int) string {
 	}
 	
 	return strings.Join(key, ",")
+}
+
+// Removes key columns from the line
+func removeKeyColumnsValues(line *[]string, key_columns []int) {
+	for _, i := range key_columns {
+		*line = append((*line)[ :i ], (*line)[ i + 1: ]...)
+	}
 }
 
 // Find column with highest index
