@@ -6,27 +6,46 @@ import (
 )
 
 var config = Options{
-	// Input:     "./_/short.csv",
-	Input:     "./_/long.csv",
-	// Input:     "./_/1m.csv",
-	KeyColumns: []int{ 1,2,9 },
-	SkipHeader: true,
-	// Delimiter: ',',
+	// Input:             "./_/short.csv",
+	// Input:             "./_/long.csv",
+	// Input:             "./_/no_valid.csv",
+	Input:             "./_/1gb.csv",
+	KeyColumns:        []int{1},
+	SkipHeader:        false,
+	Delimiter:         ',',
+	IncludeKeysValues: false,
 }
 
-func TestModuleName(t *testing.T) {
+func TestFile(t *testing.T) {
 	hash, err := File(config)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("(!) csv file error:", err)
 	}
 	
-	fmt.Println("done:", len(hash))
+	fmt.Println("total:", len(hash))
 	
 	for key, val := range hash {
-		fmt.Println(">", key)
+		fmt.Println(key)
 		for _, f := range val {
-			fmt.Println("\t",f)
+			fmt.Println("\t", fmt.Sprintf("%q", f))
 		}
+		
+		break
+	}
+}
+
+func TestFileFlat(t *testing.T) {
+	hash, err := FileFlat(config)
+	if err != nil {
+		fmt.Println("(!) csv file error:", err)
+	}
+	
+	fmt.Println("total:", len(hash))
+	
+	for key, val := range hash {
+		fmt.Println(key, ":", val)
+		
+		break
 	}
 }
 
