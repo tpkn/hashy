@@ -11,7 +11,7 @@ import (
    "github.com/tpkn/hashy"
 )
 
-var config = hashy.Options{
+var options = hashy.Options{
    Input:             "./test/file.csv",
    KeyColumns:        []int{ 0, 12, 45 },
    IncludeKeysValues: false,
@@ -20,7 +20,7 @@ var config = hashy.Options{
    LazyQuotes:        false,
 }
 
-var hash, err = hashy.File(config)
+var hash, err = hashy.File(options)
 if err != nil {
    panic(err)
 }
@@ -38,7 +38,7 @@ for key, val := range hash {
 To make a flat hash map (one key - one value):
 
 ```go
-var hash, err = hashy.FileFlat(config)
+var hash, err = hashy.FileFlat(options)
 ```
 
 
